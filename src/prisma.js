@@ -1,8 +1,8 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-async function findUsersByEmail(email) {
+export async function findUsersByEmail(email) {
   try {
     const users = await prisma.user.findMany({
       where: {
@@ -16,4 +16,4 @@ async function findUsersByEmail(email) {
   }
 }
 
-module.exports = { findUsersByEmail, prisma };
+export { prisma };
