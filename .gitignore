@@ -1,0 +1,30 @@
+# Dependency directories
+node_modules/
+
+# Prisma ORM files
+.prisma/
+migrations/
+
+# Environment variable file
+.env
+
+# Build output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# IDE and editor directories
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Optional npm cache directory
+.npm
