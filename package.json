@@ -1,0 +1,35 @@
+{
+  "name": "prisma-auth",
+  "version": "1.0.0",
+  "description": "Authentication library designed with Prisma, and simplicity in mind.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "doc": "jsdoc -c jsdoc.json",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aidan-neel/PrismaAuth.js.git"
+  },
+  "keywords": [
+    "Prisma",
+    "Authentication",
+    "Auth",
+    "Library",
+    "Prisma.js",
+    "PrismaAuth.js",
+    "PrismaAuth",
+    "Auth",
+    "Prisma"
+  ],
+  "author": "Aidan Neel | aidan-neel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aidan-neel/PrismaAuth.js/issues"
+  },
+  "homepage": "https://github.com/aidan-neel/PrismaAuth.js#readme",
+  "devDependencies": {
+    "jsdoc": "^4.0.2"
+  }
+}
