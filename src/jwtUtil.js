@@ -7,6 +7,8 @@ export function generateToken(user) {
     userId: user.id,
     email: user.email,
     name: user.name,
+    time: new Date(),
+    randomString: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
     // You can add more user details here if needed
   };
 
