@@ -5,6 +5,12 @@ import bcrypt from "bcrypt";
 import { generateToken } from "./jwtUtil.js";
 import { isValidUrl } from "./utils.js";
 
+/**
+ * A class to handle authentication.
+ * @class
+ * @property {PrismaClient} prisma - The Prisma ORM client.
+ * @public
+ */
 export class PrismaAuth {
     constructor(prisma) {
         this.prisma = prisma;
