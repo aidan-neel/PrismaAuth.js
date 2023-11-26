@@ -23,10 +23,11 @@ export class PrismaAuth extends EventEmitter {
     /**
      * A function to validate a session.
      * @param {string} sessionToken - The session token to validate.
-     * @returns {Promise<boolean>} True if the session is valid, false otherwise.
+     * @returns {Promise<boolean>} True if the session is valid, false otherwise. Means the session exists.
      * @throws {Error} Throws an error if there is an error validating the session.
      */
     async validateSession(sessionToken) {
+        this.cleanupExpiredSessions();
         const prisma = this.prisma;
 
         const session = await this.getSessionData(sessionToken);
