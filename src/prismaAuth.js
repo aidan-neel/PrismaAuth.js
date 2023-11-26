@@ -54,7 +54,7 @@ export class PrismaAuth {
     async loginUser(email, plainTextPassword) {
         const prisma = this.prisma;     
 
-        const userExists = await this._userExists(email);
+        const userExists = await this.userExists(email);
 
         if (!userExists) {
             throw new Error("User does not exist");
@@ -66,13 +66,13 @@ export class PrismaAuth {
             }
         });
 
-        const isPasswordValid = await this._validatePassword(plainTextPassword, user.password);
+        const isPasswordValid = await this.validatePassword(plainTextPassword, user.password);
         if(!isPasswordValid) {
             throw new Error("Invalid password")
         }
 
         const token = generateToken(user);
-        const session = await this._createSession(user.id, token);
+        const session = await this.createSession(user.id, token);
         return { token: token, session: session, user: user };
     }
 
@@ -84,7 +84,7 @@ export class PrismaAuth {
      * @throws {Error} Throws an error if there is an error validating the password.
      * @private 
      */
-    async _validatePassword(plainTextPassword, hashedPassword) {
+    async validatePassword(plainTextPassword, hashedPassword) {
         try {
             return await bcrypt.compare(plainTextPassword, hashedPassword);
         } catch (err) {
@@ -133,21 +133,21 @@ export class PrismaAuth {
             throw new Error("Invalid email");
         }
 
-        const passwordStrength = this._passwordStrengthChecker(plainTextPassword);
+        const passwordStrength = this.passwordStrengthChecker(plainTextPassword);
         if (passwordStrength !== "Password is strong") {
             throw new Error(passwordStrength);
         }
 
-        const userExists = await this._userExists(email);
+        const userExists = await this.userExists(email);
         if (userExists) {
             throw new Error("User already exists");
         }
 
-        const hashedPassword = await this._hashPassword(plainTextPassword);
-        const user = await this._createUser(email, hashedPassword, name);
+        const hashedPassword = await this.hashPassword(plainTextPassword);
+        const user = await this.createUser(email, hashedPassword, name);
 
         const token = generateToken(user);
-        const session = await this._createSession(user.id, token);
+        const session = await this.createSession(user.id, token);
         return { token: token, session: session };
     }
 
@@ -156,7 +156,7 @@ export class PrismaAuth {
      * @param {string} email - The email address of the user.
      * @returns {Promise<boolean>} True if the user exists, false otherwise.
      */
-    async _userExists(email) {
+    async userExists(email) {
         // for QOL purposes and to make the code more readable
         const prisma = this.prisma;
         
@@ -175,7 +175,7 @@ export class PrismaAuth {
      * @param {number} expiration - The expiration of the session. Defaults to 1 hour.
      * @returns {Promise<session>} The session object.
      */
-    async _createSession(userId, token, expiration = 3600000) {
+    async createSession(userId, token, expiration = 3600000) {
         const prisma = this.prisma;
 
         const session = await prisma.session.create({
@@ -202,7 +202,7 @@ export class PrismaAuth {
      * @param {string} name - The name of the user.
      * @returns {Promise<user>} The user object.
      */
-    async _createUser(email, hashedPassword, name) {
+    async createUser(email, hashedPassword, name) {
         const prisma = this.prisma;
 
         const user = await prisma.user.create({
@@ -222,7 +222,7 @@ export class PrismaAuth {
      * @throws {Error} Throws an error if there is an error hashing the password.
      * @private
      */
-    async _hashPassword(plainTextPassword) {
+    async hashPassword(plainTextPassword) {
         const saltRounds = 10;
         try {
             const hashedPassword = await bcrypt.hash(plainTextPassword, saltRounds);
@@ -237,13 +237,13 @@ export class PrismaAuth {
      * @param {string} password - The password to check.
      * @returns {string} A string indicating whether the password is strong or not.
      */
-    _passwordStrengthChecker(password) {
-        const MIN_PASSWORD_LENGTH = 6;
-        const MAX_PASSWORD_LENGTH = 24;
+    passwordStrengthChecker(password) {
+        const MINPASSWORDLENGTH = 6;
+        const MAXPASSWORDLENGTH = 24;
 
-        if (password.length < MIN_PASSWORD_LENGTH) {
+        if (password.length < MINPASSWORDLENGTH) {
             return "Password is too short";
-        } else if ( password.length > MAX_PASSWORD_LENGTH) {
+        } else if ( password.length > MAXPASSWORDLENGTH) {
             return "Password is too long";
         }
         return "Password is strong";

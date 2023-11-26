@@ -28,3 +28,7 @@ Thumbs.db
 
 # Optional npm cache directory
 .npm
+
+# DB files
+.db
+.sqlite

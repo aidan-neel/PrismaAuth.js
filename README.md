@@ -11,3 +11,5 @@ PrismaAuth.js is a JavaScript authentication library designed to work seamlessly
 
 ## Installation
 TBD
+
+// REQUIRES YOU TO SET JWT SECRET KEY IN A .ENV FILE
