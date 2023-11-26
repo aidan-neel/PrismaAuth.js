@@ -1,42 +1,46 @@
 declare module '@aaidan5899/prisma-auth' {
-    import { PrismaClient } from '@prisma/client';
-    export class PrismaAuth {
-        constructor(prisma: PrismaClient);
-
-        cleanupExpiredSessions(): Promise<void>;
-
-        loginUser(email: string, plainTextPassword: string): Promise<LoginData>;
-
-        registerUser(email: string, plainTextPassword: string, name: string): Promise<SessionData>;
-
-        createSessionCookie(session: Session): string;
-    }
-
-    // Define additional types as used in your class
-    export interface LoginData {
+    import { PrismaClient, Session, User } from "@prisma/client"; // Import Prisma types as needed
+    export declare namespace PrismaAuthTypes {
+    type SessionData = {
         token: string;
         session: Session;
-        user: User;
-    }
+    };
 
-    export interface SessionData {
-        token: string;
-        session: Session;
-    }
-
-    export interface Session {
-        id: number;
-        token: string;
-        createdAt: Date;
-        expiresAt: Date;
-        invalidated: boolean;
-        user: User;
-    }
-
-    export interface User {
+    type UserData = {
         id: number;
         email: string;
         hashedPassword: string;
         name: string;
+    };
+
+    type LoginData = {
+        token: string;
+        session: Session;
+        user: UserData;
+    };
+    }
+
+    export declare class PrismaAuth {
+    constructor(prisma: PrismaClient);
+
+    cleanupExpiredSessions(): Promise<void>;
+
+    loginUser(email: string, plainTextPassword: string): Promise<PrismaAuthTypes.LoginData>;
+
+    validatePassword(plainTextPassword: string, hashedPassword: string): Promise<boolean>;
+
+    registerUser(email: string, plainTextPassword: string, name: string): Promise<PrismaAuthTypes.SessionData>;
+
+    userExists(email: string): Promise<boolean>;
+
+    createSession(userId: number, token: string, expiration?: number): Promise<Session>;
+
+    createUser(email: string, hashedPassword: string, name: string): Promise<User>;
+
+    hashPassword(plainTextPassword: string): Promise<string>;
+
+    passwordStrengthChecker(password: string): string;
+
+    createSessionCookie(session: Session): string;
     }
 }
