@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "prisma-auth",
+  "name": "@aaidan5899/prisma-auth",
   "version": "1.0.0",
   "description": "Authentication library designed with Prisma, and simplicity in mind.",
   "main": "index.js",

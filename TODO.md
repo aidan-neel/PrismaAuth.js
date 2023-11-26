@@ -2,34 +2,34 @@
 
 ## User Registration
 
-- [ ] **Validate Email Address**
+- [x] **Validate Email Address**
   - Implement a function to validate the email format.
   - Use regex or a validation library to ensure the email is in a proper format.
 
-- [ ] **Password Strength Validation**
+- [x] **Password Strength Validation**
   - Implement password strength checks (minimum length, complexity requirements like numbers, uppercase letters, symbols, etc.).
   - Consider using a library for password strength validation.
 
-- [ ] **Check for Existing User**
+- [x] **Check for Existing User**
   - Implement `userExists` function to check if a user already exists with the given email.
   - Query the database to see if the email is already in use.
 
-- [ ] **Hash Password**
+- [x] **Hash Password**
   - Implement `hashPassword` function.
   - Use `bcrypt` or a similar library to hash the password with a salt.
   - Ensure password hashing is secure and follows best practices.
 
-- [ ] **Create User Record**
+- [x] **Create User Record**
   - Implement `createUser` function to save the new user in the database.
   - Store the email, hashed password, and other provided details.
 
-- [ ] **Handle Registration Errors**
+- [x] **Handle Registration Errors**
   - Implement error handling for each step of the registration process.
   - Provide clear and secure error messages to the client.
 
 ## Additional Features
 
-- [ ] **JWT Token Generation**
+- [x] **JWT Token Generation**
   - Implement functionality to generate JWT tokens for authentication after registration.
   - Ensure tokens are securely generated and stored.
 
