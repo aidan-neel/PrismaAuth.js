@@ -1,13 +1,13 @@
 {
   "type": "module",
   "name": "@aaidan5899/prisma-auth",
-  "version": "1.0.0",
-  "description": "Authentication library designed with Prisma, and simplicity in mind.",
-  "main": "index.js",
+  "version": "0.0.4",
+  "description": "Authentication library designed for Prisma with simplicity in mind.",
+  "main": "src/index.js",
+  "exports": "./src/index.js",
   "scripts": {
     "test": "jest",
-    "doc": "jsdoc -c jsdoc.json",
-    "start": "node src/index.js"
+    "doc": "jsdoc -c jsdoc.json"
   },
   "repository": {
     "type": "git",
