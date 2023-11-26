@@ -148,8 +148,7 @@ export class PrismaAuth {
         const user = await this.createUser(email, hashedPassword, name);
 
         const token = generateToken(user);
-        const session = await this.createSession(user.id, token);
-        return { token: token, session: session, user: user };
+        return { token: token, user: user };
     }
 
     /**
@@ -176,17 +175,17 @@ export class PrismaAuth {
      * @param {number} expiration - The expiration of the session. Defaults to 1 hour.
      * @returns {Promise<session>} The session object.
      */
-    async createSession(userId, token, expiration = 3600000) {
+    async createSession(userId, token, expiration = 30 * 24 * 60 * 60 * 1000) { // 30 days in milliseconds
         const prisma = this.prisma;
-
+    
         const session = await prisma.session.create({
             data: {
                 jwtToken: token,
-                createdAt: new Date(), // Default to current date
-                expiresAt: new Date(Date.now() + expiration), // Default 1 hour
+                createdAt: new Date(),
+                expiresAt: new Date(Date.now() + expiration), // Updated to 30 days
                 invalidated: false,
                 user: {
-                    connect: { id: userId } // Correct way to link the session to the user
+                    connect: { id: userId }
                 }
             },
             include: {
@@ -195,7 +194,7 @@ export class PrismaAuth {
         });
         return session;
     }
-
+    
     /**
      * A function to create a user.
      * @param {string} email - The email address of the user.
