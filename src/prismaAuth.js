@@ -2,6 +2,7 @@
 // Server-side only
 
 import bcrypt from "bcrypt";
+import { EventEmitter } from 'events';
 import { generateToken } from "./jwtUtil.js";
 import { isValidUrl } from "./utils.js";
 
@@ -11,7 +12,9 @@ import { isValidUrl } from "./utils.js";
  * @property {PrismaClient} prisma - The Prisma ORM client.
  * @public
  */
-export class PrismaAuth {
+export class PrismaAuth extends EventEmitter {
+    currentUser = null;
+
     constructor(prisma) {
         this.prisma = prisma;
     }
@@ -73,6 +76,8 @@ export class PrismaAuth {
 
         const token = generateToken(user);
         const session = await this.createSession(user.id, token);
+        this.currentUser = user;
+        this.emit('authChanged', user);
         return { token: token, session: session, user: user };
     }
 
@@ -148,7 +153,12 @@ export class PrismaAuth {
         const user = await this.createUser(email, hashedPassword, name);
 
         const token = generateToken(user);
-        return { token: token, user: user };
+        const {token2, session2, user2 } = await this.loginUser(email, plainTextPassword)
+        return { token: token, user: user, login: {
+            token: token2,
+            session: session2,
+            user: user2
+        } };
     }
 
     /**
@@ -250,6 +260,6 @@ export class PrismaAuth {
     }
 
     createSessionCookie(session) {
-        return `session=${session.jwtToken}; HttpOnly; Max-Age=${session.expiresAt.getTime() - Date.now()}`;
+        return `session=${session.jwtToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${session.expiresAt.getTime() - Date.now()}`;
     }
 }
