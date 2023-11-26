@@ -109,6 +109,7 @@ export class PrismaAuth {
      * @typedef {Object} sessionData
      * @property {string} token - The token of the session.
      * @property {session} session - The session object.
+     * @property {user} user - The user object.
      */
 
     /**
@@ -148,7 +149,7 @@ export class PrismaAuth {
 
         const token = generateToken(user);
         const session = await this.createSession(user.id, token);
-        return { token: token, session: session };
+        return { token: token, session: session, user: user };
     }
 
     /**
