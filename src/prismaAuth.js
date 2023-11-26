@@ -16,9 +16,16 @@ export class PrismaAuth extends EventEmitter {
     currentUser = null;
 
     constructor(prisma) {
+        super();
         this.prisma = prisma;
     }
 
+    /**
+     * A function to validate a session.
+     * @param {string} sessionToken - The session token to validate.
+     * @returns {Promise<boolean>} True if the session is valid, false otherwise.
+     * @throws {Error} Throws an error if there is an error validating the session.
+     */
     async validateSession(sessionToken) {
         const prisma = this.prisma;
 
@@ -29,6 +36,13 @@ export class PrismaAuth extends EventEmitter {
         return !session.invalidated && session.expiresAt > new Date();
     }
 
+    /**
+     * A function to get the data of a session.
+     * @param {string} sessionToken - The session token to get the data of.
+     * @returns {Promise<session>} The session object.
+     * @throws {Error} Throws an error if there is an error getting the session data.
+     * @private
+     */
     async getSessionData(sessionToken) { 
         const valid = this.validateSession(sessionToken);
 
@@ -49,6 +63,11 @@ export class PrismaAuth extends EventEmitter {
         return session;
     }
 
+    /**
+     * A function which clears expired sessions.
+     * @returns {Promise<void>}
+     * @throws {Error} Throws an error if there is an error clearing expired sessions.
+     */
     async cleanupExpiredSessions() {
         const prisma = this.prisma;
 
