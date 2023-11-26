@@ -29,12 +29,18 @@ export class PrismaAuth extends EventEmitter {
     async validateSession(sessionToken) {
         this.cleanupExpiredSessions();
         const prisma = this.prisma;
-
-        const session = await this.getSessionData(sessionToken);
-        if (session === null) {
+    
+        const session = await prisma.session.findUnique({
+            where: {
+                jwtToken: sessionToken
+            }
+        });
+    
+        if (session === null || session.invalidated || session.expiresAt <= new Date()) {
             return false;
         }
-        return !session.invalidated && session.expiresAt > new Date();
+    
+        return true;
     }
 
     /**
@@ -45,14 +51,14 @@ export class PrismaAuth extends EventEmitter {
      * @private
      */
     async getSessionData(sessionToken) { 
-        const valid = this.validateSession(sessionToken);
-
+        const valid = await this.validateSession(sessionToken); // Make sure to await
+    
         if (!valid) {
             return null;
         }
-
+    
         const prisma = this.prisma;
-
+    
         const session = await prisma.session.findUnique({
             where: {
                 jwtToken: sessionToken
@@ -61,9 +67,10 @@ export class PrismaAuth extends EventEmitter {
                 user: true
             }
         });
+    
         return session;
     }
-
+    
     /**
      * A function which clears expired sessions.
      * @returns {Promise<void>}
