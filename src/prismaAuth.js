@@ -19,6 +19,36 @@ export class PrismaAuth extends EventEmitter {
         this.prisma = prisma;
     }
 
+    async validateSession(sessionToken) {
+        const prisma = this.prisma;
+
+        const session = await this.getSessionData(sessionToken);
+        if (session === null) {
+            return false;
+        }
+        return !session.invalidated && session.expiresAt > new Date();
+    }
+
+    async getSessionData(sessionToken) { 
+        const valid = this.validateSession(sessionToken);
+
+        if (!valid) {
+            return null;
+        }
+
+        const prisma = this.prisma;
+
+        const session = await prisma.session.findUnique({
+            where: {
+                jwtToken: sessionToken
+            },
+            include: {
+                user: true
+            }
+        });
+        return session;
+    }
+
     async cleanupExpiredSessions() {
         const prisma = this.prisma;
 
