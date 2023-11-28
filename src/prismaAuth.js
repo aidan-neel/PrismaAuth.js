@@ -44,6 +44,37 @@ export class PrismaAuth extends EventEmitter {
     }
 
     /**
+     * A function to sign a user out.
+     * Calls this.cleanupExpiredSessions() and deletes the current session.
+     * @param {string} sessionToken - The session token to sign out.
+     * @returns {Promise<boolean>}
+     */
+    async signUserOut(sessionToken) {
+        const prisma = this.prisma;
+
+        const session = await prisma.session.findUnique({
+            where: {
+                jwtToken: sessionToken
+            }
+        });
+
+        if (session === null) {
+            return false;
+        }
+
+        await prisma.session.delete({
+            where: {
+                jwtToken: sessionToken
+            }
+        });
+
+        this.currentUser = null;
+        this.emit('authChanged', null);
+        this.cleanupExpiredSessions();
+        return true;
+    }
+
+    /**
      * A function to get the data of a session.
      * @param {string} sessionToken - The session token to get the data of.
      * @returns {Promise<session>} The session object.
