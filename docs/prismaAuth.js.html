@@ -1,4 +1,32 @@
-// Intended to be used with Prisma ORM
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: prismaAuth.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: prismaAuth.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// Intended to be used with Prisma ORM
 // Server-side only
 
 import bcrypt from "bcrypt";
@@ -23,7 +51,7 @@ export class PrismaAuth extends EventEmitter {
     /**
      * A function to validate a session.
      * @param {string} sessionToken - The session token to validate.
-     * @returns {Promise<boolean>} True if the session is valid, false otherwise. Means the session exists.
+     * @returns {Promise&lt;boolean>} True if the session is valid, false otherwise. Means the session exists.
      * @throws {Error} Throws an error if there is an error validating the session.
      */
     async validateSession(sessionToken) {
@@ -36,7 +64,7 @@ export class PrismaAuth extends EventEmitter {
             }
         });
     
-        if (session === null || session.invalidated || session.expiresAt <= new Date()) {
+        if (session === null || session.invalidated || session.expiresAt &lt;= new Date()) {
             return false;
         }
     
@@ -46,7 +74,7 @@ export class PrismaAuth extends EventEmitter {
     /**
      * A function to get the data of a session.
      * @param {string} sessionToken - The session token to get the data of.
-     * @returns {Promise<session>} The session object.
+     * @returns {Promise&lt;session>} The session object.
      * @throws {Error} Throws an error if there is an error getting the session data.
      * @private
      */
@@ -67,19 +95,15 @@ export class PrismaAuth extends EventEmitter {
                 user: true
             }
         });
-
-        if(session.invalidated === true) {
-            return null;
-        }
     
         return session;
     }
     
     /**
      * A function which clears expired sessions.
-     * @returns {Promise<void>}
+     * @returns {Promise&lt;void>}
      * @throws {Error} Throws an error if there is an error clearing expired sessions.
-     */ 
+     */
     async cleanupExpiredSessions() {
         const prisma = this.prisma;
 
@@ -112,7 +136,7 @@ export class PrismaAuth extends EventEmitter {
      * A function to login a user.
      * @param {string} email
      * @param {string} plainTextPassword
-     * @returns {Promise<loginData>} An object containing the token and the user.
+     * @returns {Promise&lt;loginData>} An object containing the token and the user.
      * @throws {Error} Throws an error if there is an error logging in the user.
      */
     async loginUser(email, plainTextPassword) {
@@ -146,7 +170,7 @@ export class PrismaAuth extends EventEmitter {
      * A function to validate a password.
      * @param {string} plainTextPassword - The plain text password to validate.
      * @param {string} hashedPassword - The hashed password to validate against.
-     * @returns {Promise<boolean>} True if the password is valid, false otherwise.
+     * @returns {Promise&lt;boolean>} True if the password is valid, false otherwise.
      * @throws {Error} Throws an error if there is an error validating the password.
      * @private 
      */
@@ -188,7 +212,7 @@ export class PrismaAuth extends EventEmitter {
      * @param {string} email
      * @param {string} plainTextPassword
      * @param {string} name
-     * @returns {Promise<sessionData>} An object containing the token and the session.
+     * @returns {Promise&lt;sessionData>} An object containing the token and the session.
      */
     async registerUser(email, plainTextPassword, name) {
         const prisma = this.prisma;
@@ -222,7 +246,7 @@ export class PrismaAuth extends EventEmitter {
     /**
      * A function to check if a user exists. Uses email to determine if a user exists.
      * @param {string} email - The email address of the user.
-     * @returns {Promise<boolean>} True if the user exists, false otherwise.
+     * @returns {Promise&lt;boolean>} True if the user exists, false otherwise.
      */
     async userExists(email) {
         // for QOL purposes and to make the code more readable
@@ -241,7 +265,7 @@ export class PrismaAuth extends EventEmitter {
      * @param {number} userId - The id of the user.
      * @param {string} token - The token of the user.
      * @param {number} expiration - The expiration of the session. Defaults to 1 hour.
-     * @returns {Promise<session>} The session object.
+     * @returns {Promise&lt;session>} The session object.
      */
     async createSession(userId, token, expiration = 30 * 24 * 60 * 60 * 1000) { // 30 days in milliseconds
         const prisma = this.prisma;
@@ -268,7 +292,7 @@ export class PrismaAuth extends EventEmitter {
      * @param {string} email - The email address of the user.
      * @param {string} hashedPassword - The hashed password of the user.
      * @param {string} name - The name of the user.
-     * @returns {Promise<user>} The user object.
+     * @returns {Promise&lt;user>} The user object.
      */
     async createUser(email, hashedPassword, name) {
         const prisma = this.prisma;
@@ -286,7 +310,7 @@ export class PrismaAuth extends EventEmitter {
     /**
      * Hashes a plain text password.
      * @param {string} plainTextPassword - The plain text password to hash.
-     * @returns {Promise<string>} - The hashed password.
+     * @returns {Promise&lt;string>} - The hashed password.
      * @throws {Error} Throws an error if there is an error hashing the password.
      * @private
      */
@@ -309,7 +333,7 @@ export class PrismaAuth extends EventEmitter {
         const MINPASSWORDLENGTH = 6;
         const MAXPASSWORDLENGTH = 24;
 
-        if (password.length < MINPASSWORDLENGTH) {
+        if (password.length &lt; MINPASSWORDLENGTH) {
             return "Password is too short";
         } else if ( password.length > MAXPASSWORDLENGTH) {
             return "Password is too long";
@@ -320,4 +344,26 @@ export class PrismaAuth extends EventEmitter {
     createSessionCookie(session) {
         return `session=${session.jwtToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${session.expiresAt.getTime() - Date.now()}`;
     }
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="PrismaAuth.html">PrismaAuth</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Nov 26 2023 00:42:41 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
