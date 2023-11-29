@@ -309,6 +309,7 @@ export class PrismaAuth extends EventEmitter {
                 email: email,
                 password: hashedPassword,
                 name: name,
+                avatar: 'https://api.dicebear.com/7.x/thumbs/svg?seed=' + name + email
             },
         });
         return user;
